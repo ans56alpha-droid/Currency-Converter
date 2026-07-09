@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Header() {
+  const [online, setOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const goOnline = () => setOnline(true);
+    const goOffline = () => setOnline(false);
+    window.addEventListener("online", goOnline);
+    window.addEventListener("offline", goOffline);
+    return () => {
+      window.removeEventListener("online", goOnline);
+      window.removeEventListener("offline", goOffline);
+    };
+  }, []);
+
   return (
     <header className="relative z-50 border-b border-white/10 backdrop-blur-xl bg-white/5">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -15,8 +28,14 @@ export default function Header() {
           </span>
         </div>
         <div className="flex items-center gap-2 text-xs text-white/40">
-          <span className="hidden sm:inline">Real-time exchange rates</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50 animate-pulse" />
+          <span className="hidden sm:inline">{online ? "Real-time exchange rates" : "You are offline"}</span>
+          <span
+            className={`w-1.5 h-1.5 rounded-full shadow-lg ${
+              online
+                ? "bg-emerald-400 shadow-emerald-400/50 animate-pulse"
+                : "bg-red-400 shadow-red-400/50"
+            }`}
+          />
         </div>
       </div>
     </header>
