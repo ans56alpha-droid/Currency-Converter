@@ -32,6 +32,10 @@ export default function CurrencyConverter() {
     fetchCurrencies();
   }, [fromCurrency]);
 
+  useEffect(() => {
+    setResult(null);
+  }, [fromCurrency, toCurrency]);
+
   const convertCurrency = () => {
     if (!amount || !rates[toCurrency]) return;
     const convertedAmount = (amount * rates[toCurrency]).toFixed(2);
